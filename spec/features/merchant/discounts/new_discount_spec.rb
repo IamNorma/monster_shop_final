@@ -15,5 +15,21 @@ RSpec.describe 'New Merchant Discount' do
 
       expect(current_path).to eq("/merchant/discounts/new")
     end
+
+    it 'I can create a new discount by filling out a form' do
+      name = "15% off 10 or more items"
+      discount = 15
+      quantity = 10
+
+      visit "/merchant/discounts/new"
+
+      fill_in :name, with: name
+      fill_in :discount_percentage, with: discount
+      fill_in :minimum_quantity, with: quantity
+      click_button "Create Discount"
+
+      expect(current_path).to eq("/merchant/discounts")
+      expect(page).to have_content(name)
+    end
   end
 end
