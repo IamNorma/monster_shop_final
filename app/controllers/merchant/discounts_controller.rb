@@ -19,6 +19,10 @@ class Merchant::DiscountsController < Merchant::BaseController
     @merchant = current_user.merchant
   end
 
+  def edit
+
+  end 
+
   private
 
   def discount_params
