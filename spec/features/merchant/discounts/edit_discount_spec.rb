@@ -27,7 +27,7 @@ RSpec.describe 'Update Merchant Discount' do
       fill_in :name, with: name
       fill_in :discount_percentage, with: discount
       fill_in :minimum_quantity, with: quantity
-      click_button 'Update Item'
+      click_button 'Update Discount'
 
       expect(current_path).to eq("/merchant/discounts")
       expect(page).to have_content(name)
