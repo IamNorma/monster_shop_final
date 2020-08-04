@@ -17,4 +17,4 @@ RSpec.describe 'Update Merchant Discount' do
       expect(current_path).to eq("/merchant/discounts/#{@discount1.id}/edit")
     end
   end
-end 
+end
