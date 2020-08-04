@@ -7,6 +7,7 @@ class Merchant::DiscountsController < Merchant::BaseController
     merchant = current_user.merchant
     discount = merchant.discounts.new(discount_params)
     if discount.save
+      flash[:success] = "Discount was successfully created"
       redirect_to "/merchant/discounts"
     else
       flash[:error] = discount.errors.full_messages.to_sentence
