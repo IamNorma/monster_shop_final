@@ -31,6 +31,7 @@ RSpec.describe 'Update Merchant Discount' do
 
       expect(current_path).to eq("/merchant/discounts")
       expect(page).to have_content(name)
+      expect(page).to have_content("Discount was successfully updated")
     end
   end
 end
