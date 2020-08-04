@@ -167,6 +167,46 @@ RSpec.describe 'Cart Show Page' do
         expect(page).to_not have_content("#{@hippo.name}")
         expect(page).to have_content("Cart: 0")
       end
+
+      it 'if I add enough quantity of a single item to my cart the bulk discount will show up' do
+        merchant_1 = Merchant.create!(name: 'Megans Marmalades', address: '123 Main St', city: 'Denver', state: 'CO', zip: 80218)
+        r_user = User.create(name: 'Megan', address: '123 Main St', city: 'Denver', state: 'CO', zip: 80218, email: 'megan@example.com', password: 'securepassword', role: 0)
+        pen = merchant_1.items.create!(name: 'Pen', description: "Best pen", price: 5, image: 'https://cdn.shopify.com/s/files/1/0013/9676/8815/products/BK90-A_cf6209e2-3d53-4664-98bc-24145e455988_1800x1800.png?v=1541660986', active: true, inventory: 50 )
+        paper_clip = merchant_1.items.create!(name: 'Paper clip', description: "Will nicely clip your papers", price: 8, image: 'https://s3-eu-west-1.amazonaws.com/media.santu.com/3721/Paperclip_13500134721277.jpg', active: true, inventory: 25 )
+        discount1 = merchant_1.discounts.create!(name: "15% off 5 or more items", discount_percentage: 15, minimum_quantity: 5)
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(r_user)
+
+        visit "items/#{pen.id}"
+        click_button 'Add to Cart'
+
+        visit "items/#{paper_clip.id}"
+        click_button 'Add to Cart'
+
+        visit '/cart'
+
+        within "#item-#{pen.id}" do
+          click_button('More of This!')
+          click_button('More of This!')
+          click_button('More of This!')
+          click_button('More of This!')
+        end
+
+        within "#item-#{paper_clip.id}" do
+          click_button('More of This!')
+        end
+
+        expect(current_path).to eq('/cart')
+
+        within "#item-#{pen.id}" do
+          expect(page).to have_content("Subtotal: $21.25 with discount")
+        end
+
+        within "#item-#{paper_clip.id}" do
+          expect(page).to have_content("Subtotal: $16.00")
+        end
+
+        expect(page).to have_content("Total: $37.25")
+      end
     end
   end
 end
