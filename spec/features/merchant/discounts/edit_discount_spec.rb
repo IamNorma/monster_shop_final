@@ -16,5 +16,21 @@ RSpec.describe 'Update Merchant Discount' do
 
       expect(current_path).to eq("/merchant/discounts/#{@discount1.id}/edit")
     end
+
+    it 'I can edit the discount information' do
+      name = "15% off 8 items or more"
+      discount = 15
+      quantity = 8
+
+      visit "merchant/discounts/#{@discount1.id}/edit"
+
+      fill_in :name, with: name
+      fill_in :discount_percentage, with: description
+      fill_in :minimum_quantity, with: price
+      click_button 'Update Item'
+
+      expect(current_path).to eq("/merchant/discounts")
+      expect(page).to have_content(name)
+    end
   end
 end
