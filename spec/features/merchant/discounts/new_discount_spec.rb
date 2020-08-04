@@ -30,6 +30,7 @@ RSpec.describe 'New Merchant Discount' do
 
       expect(current_path).to eq("/merchant/discounts")
       expect(page).to have_content(name)
+      expect(page).to have_content("Discount was successfully created")
     end
 
     it 'I can not create a discount for a merchant with an incomplete form' do
