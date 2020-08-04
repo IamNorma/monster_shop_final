@@ -17,7 +17,7 @@ RSpec.describe 'Destroy a Discount' do
       expect(page).to have_content(@discount2.name)
 
       within "#discount-#{@discount2.id}" do
-        click_button 'Delete Discount'
+        click_on 'Delete Discount'
       end
 
       expect(current_path).to eq("/merchant/discounts")
