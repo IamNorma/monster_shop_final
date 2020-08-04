@@ -14,6 +14,10 @@ class Merchant::DiscountsController < Merchant::BaseController
     end
   end
 
+  def index
+
+  end 
+
   private
 
   def discount_params
