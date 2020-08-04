@@ -2,4 +2,5 @@
 
 <% @merchant.discounts.each do |discount| %>
   <%= discount.name %>
+  <%= link_to "Update Discount", "/merchant/discounts/#{discount.id}/edit" %>
 <% end %>
