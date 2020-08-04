@@ -15,8 +15,8 @@ class Merchant::DiscountsController < Merchant::BaseController
   end
 
   def index
-
-  end 
+    @merchant = current_user.merchant
+  end
 
   private
 
