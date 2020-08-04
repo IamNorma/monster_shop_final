@@ -16,6 +16,8 @@ RSpec.describe 'Discount Index Page' do
       click_link 'View All Your Discounts'
 
       expect(current_path).to eq("/merchant/discounts")
+      expect(page).to have_content(@discount1.name)
+      expect(page).to have_content(@discount2.name)
     end
   end
 end
