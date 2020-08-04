@@ -9,7 +9,7 @@ class Merchant::DiscountsController < Merchant::BaseController
     if discount.save
       redirect_to "/merchant/discounts"
     else
-      generate_flash(discount)
+      flash[:error] = discount.errors.full_messages.to_sentence
       redirect_to "/merchant/discounts/new"
     end
   end
