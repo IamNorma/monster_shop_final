@@ -33,5 +33,18 @@ RSpec.describe 'Update Merchant Discount' do
       expect(page).to have_content(name)
       expect(page).to have_content("Discount was successfully updated")
     end
+
+    it 'I can not edit a discount with an incomplete form' do
+      name = "15% off 8 items or more"
+
+      visit "merchant/discounts/#{@discount1.id}/edit"
+
+      fill_in :name, with: name
+      click_button 'Update Discount'
+
+      expect(page).to have_content("Discount percentage can't be blank")
+      expect(page).to have_content("Minimum quantity can't be blank")
+      expect(page).to have_button('Update Discount')
+    end
   end
 end
