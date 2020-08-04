@@ -25,8 +25,8 @@ RSpec.describe 'Update Merchant Discount' do
       visit "merchant/discounts/#{@discount1.id}/edit"
 
       fill_in :name, with: name
-      fill_in :discount_percentage, with: description
-      fill_in :minimum_quantity, with: price
+      fill_in :discount_percentage, with: discount
+      fill_in :minimum_quantity, with: quantity
       click_button 'Update Item'
 
       expect(current_path).to eq("/merchant/discounts")
