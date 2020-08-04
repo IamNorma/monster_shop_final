@@ -44,5 +44,29 @@ RSpec.describe 'New Merchant Discount' do
       expect(page).to have_content("Discount percentage can't be blank")
       expect(page).to have_content("Minimum quantity can't be blank")
     end
+
+    it 'I can create multiple bulk discounts' do
+      name = "15% off 10 or more items"
+      discount = 15
+      quantity = 10
+
+      visit "/merchant/discounts/new"
+
+      fill_in :name, with: name
+      fill_in :discount_percentage, with: discount
+      fill_in :minimum_quantity, with: quantity
+      click_button "Create Discount"
+
+      visit "/merchant/discounts/new"
+
+      fill_in :name, with: "5% off 5 or more items"
+      fill_in :discount_percentage, with: 5
+      fill_in :minimum_quantity, with: 5
+      click_button "Create Discount"
+
+      expect(current_path).to eq("/merchant/discounts")
+      expect(page).to have_content(name)
+      expect(page).to have_content("5% off 5 or more items")
+    end
   end
 end
