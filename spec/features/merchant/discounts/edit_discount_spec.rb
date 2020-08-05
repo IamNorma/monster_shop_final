@@ -40,6 +40,8 @@ RSpec.describe 'Update Merchant Discount' do
       visit "merchant/discounts/#{@discount1.id}/edit"
 
       fill_in :name, with: name
+      fill_in :discount_percentage, with: " "
+      fill_in :minimum_quantity, with: " "
       click_button 'Update Discount'
 
       expect(page).to have_content("Discount percentage can't be blank")
