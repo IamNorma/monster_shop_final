@@ -307,6 +307,29 @@ RSpec.describe 'Cart Show Page' do
           expect(page).to have_content("Discount: -$2.70")
         end
       end
+
+      it 'When there is a conflict between discounts, the greater of the two will be applied' do
+        merchant_1 = Merchant.create!(name: 'Megans Marmalades', address: '123 Main St', city: 'Denver', state: 'CO', zip: 80218)
+        r_user = User.create(name: 'Megan', address: '123 Main St', city: 'Denver', state: 'CO', zip: 80218, email: 'megan@example.com', password: 'securepassword', role: 0)
+        pen = merchant_1.items.create!(name: 'Pen', description: "Best pen", price: 5, image: 'https://cdn.shopify.com/s/files/1/0013/9676/8815/products/BK90-A_cf6209e2-3d53-4664-98bc-24145e455988_1800x1800.png?v=1541660986', active: true, inventory: 50 )
+        discount1 = merchant_1.discounts.create!(name: "15% off 5 or more items", discount_percentage: 15, minimum_quantity: 5)
+        discount2 = merchant_1.discounts.create!(name: "50% off 15 or more items", discount_percentage: 50, minimum_quantity: 15)
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(r_user)
+
+        visit "items/#{pen.id}"
+        click_button 'Add to Cart'
+
+        visit '/cart'
+
+        within "#item-#{pen.id}" do
+          16.times { click_button('More of This!') }
+        end
+
+        within "#item-#{pen.id}" do
+          expect(page).to have_content("Discount: -$42.50")
+          expect(page).to have_content("Subtotal: $42.50 with discount")
+        end
+      end 
     end
   end
 end
