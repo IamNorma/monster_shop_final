@@ -49,17 +49,5 @@ RSpec.describe 'User Order Show Page' do
         expect(page).to have_content("Total: #{number_to_currency(@order_2.grand_total)}")
       end
     end
-
-    it 'reflects total with applied discounts' do
-      visit '/profile/orders'
-
-      within "#order-#{@order_1.id}" do
-        expect(page).to have_content("Total: $34.43")
-      end
-
-      within "#order-#{@order_2.id}" do
-        expect(page).to have_content("Total: $115.38")
-      end
-    end
   end
 end

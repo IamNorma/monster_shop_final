@@ -35,6 +35,18 @@ RSpec.describe 'Create Order' do
         expect(page).to have_link(order.id)
       end
     end
+
+    it 'reflects total with applied discounts' do
+      visit '/profile/orders'
+
+      within "#order-#{@order_1.id}" do
+        expect(page).to have_content("Total: $34.43")
+      end
+
+      within "#order-#{@order_2.id}" do
+        expect(page).to have_content("Total: $115.38")
+      end
+    end
   end
 
   describe 'As a Visitor' do
