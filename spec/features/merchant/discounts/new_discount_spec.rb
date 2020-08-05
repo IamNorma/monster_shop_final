@@ -4,7 +4,7 @@ RSpec.describe 'New Merchant Discount' do
   describe 'As a Merchant' do
     before :each do
       @merchant_1 = Merchant.create!(name: 'Megans Marmalades', address: '123 Main St', city: 'Denver', state: 'CO', zip: 80218)
-      @m_user = @merchant_1.users.create(name: 'Megan', address: '123 Main St', city: 'Denver', state: 'CO', zip: 80218, email: 'megan@example.com', password: 'securepassword')
+      @m_user = @merchant_1.users.create(name: 'Megan', address: '123 Main St', city: 'Denver', state: 'CO', zip: 80218, email: 'megan@example.com', password: 'securepassword', role: 1)
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@m_user)
     end
 
@@ -43,6 +43,30 @@ RSpec.describe 'New Merchant Discount' do
 
       expect(page).to have_content("Discount percentage can't be blank")
       expect(page).to have_content("Minimum quantity can't be blank")
+    end
+
+    it 'I can create multiple bulk discounts' do
+      name = "15% off 10 or more items"
+      discount = 15
+      quantity = 10
+
+      visit "/merchant/discounts/new"
+
+      fill_in :name, with: name
+      fill_in :discount_percentage, with: discount
+      fill_in :minimum_quantity, with: quantity
+      click_button "Create Discount"
+
+      visit "/merchant/discounts/new"
+
+      fill_in :name, with: "5% off 5 or more items"
+      fill_in :discount_percentage, with: 5
+      fill_in :minimum_quantity, with: 5
+      click_button "Create Discount"
+
+      expect(current_path).to eq("/merchant/discounts")
+      expect(page).to have_content(name)
+      expect(page).to have_content("5% off 5 or more items")
     end
   end
 end
