@@ -40,6 +40,8 @@ RSpec.describe 'Create Order' do
     it 'reflects total with applied discounts' do
       visit item_path(@ogre)
       click_button 'Add to Cart'
+      visit item_path(@ogre)
+      click_button 'Add to Cart'
       visit item_path(@hippo)
       click_button 'Add to Cart'
 
@@ -54,7 +56,7 @@ RSpec.describe 'Create Order' do
       expect(page).to have_link('Cart: 0')
 
       within "#order-#{order.id}" do
-        expect(page).to have_content("Total: $67")
+        expect(page).to have_content("Total: $84")
       end
     end
   end
