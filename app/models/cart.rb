@@ -48,28 +48,25 @@ class Cart
     count_of(item_id) == Item.find(item_id).inventory
   end
 
-  def has_discount?(item_id)
+  def applicable_discount(item_id)
     item = Item.find(item_id)
     item_quantity = @contents[item_id.to_s]
     applicable_discount = item.merchant.discounts.where('minimum_quantity <= ?', item_quantity).order(:discount_percentage).last
-    !applicable_discount.nil?
+  end
+  
+  def has_discount?(item_id)
+    !applicable_discount(item_id).nil?
   end
 
   def discount_amount(item_id)
-    item = Item.find(item_id)
-    item_quantity = @contents[item_id.to_s]
-    applicable_discount = item.merchant.discounts.where('minimum_quantity <= ?', item_quantity).order(:discount_percentage).last
-    if !applicable_discount.nil?
-      subtotal_of(item_id) * (applicable_discount.discount_percentage.to_f / (100))
-    end 
+    if !applicable_discount(item_id).nil?
+      subtotal_of(item_id) * (applicable_discount(item_id).discount_percentage.to_f / (100))
+    end
   end
 
   def discount_price(item_id)
-    item = Item.find(item_id)
-    item_quantity = @contents[item_id.to_s]
-    applicable_discount = item.merchant.discounts.where('minimum_quantity <= ?', item_quantity).order(:discount_percentage).last
-    if !applicable_discount.nil?
-      Item.find(item_id).price * (applicable_discount.discount_percentage.to_f / (100))
+    if !applicable_discount(item_id).nil?
+      Item.find(item_id).price * (applicable_discount(item_id).discount_percentage.to_f / (100))
     else
       0
     end
