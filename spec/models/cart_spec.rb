@@ -105,8 +105,8 @@ RSpec.describe Cart do
         })
 
       expect(cart2.discount_amount(pen.id)).to eq(3.75)
-      expect(cart2.discount_amount(tire.id)).to eq(0)
-      expect(cart2.discount_amount(paper_clip.id)).to eq(0)
+      expect(cart2.discount_amount(tire.id)).to eq(nil)
+      expect(cart2.discount_amount(paper_clip.id)).to eq(nil)
       expect(cart2.discount_amount(tack.id)).to eq(24)
     end
 
