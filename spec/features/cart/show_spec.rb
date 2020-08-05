@@ -251,6 +251,62 @@ RSpec.describe 'Cart Show Page' do
 
         expect(page).to have_content("Total: $341.25")
       end
+
+      it 'A bulk discount will only apply to items which exceed the minimum quantity specified in the bulk discount' do
+        merchant_1 = Merchant.create!(name: 'Megans Marmalades', address: '123 Main St', city: 'Denver', state: 'CO', zip: 80218)
+        r_user = User.create(name: 'Megan', address: '123 Main St', city: 'Denver', state: 'CO', zip: 80218, email: 'megan@example.com', password: 'securepassword', role: 0)
+
+        pen = merchant_1.items.create!(name: 'Pen', description: "Best pen", price: 5, image: 'https://cdn.shopify.com/s/files/1/0013/9676/8815/products/BK90-A_cf6209e2-3d53-4664-98bc-24145e455988_1800x1800.png?v=1541660986', active: true, inventory: 50 )
+        paper_clip = merchant_1.items.create!(name: 'Paper clip', description: "Will nicely clip your papers", price: 8, image: 'https://s3-eu-west-1.amazonaws.com/media.santu.com/3721/Paperclip_13500134721277.jpg', active: true, inventory: 25 )
+        tack = merchant_1.items.create!(name: 'Thumbtack', description: "Best tack out there", price: 3, image: 'https://atlas-content1-cdn.pixelsquid.com/assets_v2/167/1671771775815391115/jpeg-600/G03.jpg', active: true, inventory: 25 )
+        tire = merchant_1.items.create!(name: 'Tire', description: "Great for rough terrain", price: 20, image: 'https://www.rei.com/media/522a2bbc-ef7b-4945-a7ac-53bf7dff22e4?size=784x588', active: true, inventory: 25 )
+        stapler = merchant_1.items.create!(name: 'Stapler', description: "It can staple up to 50 papers together", price: 15, image: 'https://rendering.documents.cimpress.io/v1/columbus/preview?&scene=https%3A%2F%2Fscene.products.cimpress.io%2Fv1%2Fscenes%2Fab8ad720-7425-421d-8045-4fe9b7ee0bf6&width=535', active: true, inventory: 30 )
+
+        discount1 = merchant_1.discounts.create!(name: "15% off 5 or more items", discount_percentage: 15, minimum_quantity: 5)
+        allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(r_user)
+
+        visit "items/#{pen.id}"
+        click_button 'Add to Cart'
+
+        visit "items/#{paper_clip.id}"
+        click_button 'Add to Cart'
+
+        visit "items/#{tack.id}"
+        click_button 'Add to Cart'
+
+        visit "items/#{tire.id}"
+        click_button 'Add to Cart'
+
+        visit "items/#{stapler.id}"
+        click_button 'Add to Cart'
+
+        visit '/cart'
+
+        within "#item-#{pen.id}" do
+          expect(page).to have_content("Subtotal: $5.00")
+        end
+
+        within "#item-#{paper_clip.id}" do
+          expect(page).to have_content("Subtotal: $8")
+        end
+
+        within "#item-#{tack.id}" do
+          expect(page).to have_content("Subtotal: $3.00")
+        end
+
+        within "#item-#{tire.id}" do
+          expect(page).to have_content("Subtotal: $20.00")
+        end
+
+        within "#item-#{stapler.id}" do
+          expect(page).to have_content("Subtotal: $15.00")
+        end
+
+        within "#item-#{tack.id}" do
+          5.times { click_button('More of This!') }
+          expect(page).to have_content("Discount: -$2.70")
+        end
+      end
     end
   end
 end
