@@ -17,7 +17,7 @@ tack = merchant_1.items.create!(name: 'Thumbtack', description: "Best tack out t
 tire = merchant_2.items.create!(name: 'Tire', description: "Great for rough terrain", price: 20, image: 'https://www.rei.com/media/522a2bbc-ef7b-4945-a7ac-53bf7dff22e4?size=784x588', active: true, inventory: 25 )
 
 discount1 = merchant_1.discounts.create!(name: "15% off 5 or more items", discount_percentage: 15, minimum_quantity: 5)
-discount2 = merchant_1.discounts.create!(name: "50% off 15 or more items", discount_percentage: 50, minimum_quantity: 15)
+discount2 = merchant_1.discounts.create!(name: "50% off 15 or more items", discount_percentage: 50, minimum_quantity: 7)
 
 megan = Merchant.create!(name: 'Megans Marmalades', address: '123 Main St', city: 'Denver', state: 'CO', zip: 80218)
 brian = Merchant.create!(name: 'Brians Bagels', address: '125 Main St', city: 'Denver', state: 'CO', zip: 80218)
