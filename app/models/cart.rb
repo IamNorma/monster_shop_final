@@ -61,9 +61,7 @@ class Cart
     applicable_discount = item.merchant.discounts.where('minimum_quantity <= ?', item_quantity).order(:discount_percentage).last
     if !applicable_discount.nil?
       subtotal_of(item_id) * (applicable_discount.discount_percentage.to_f / (100))
-    else
-      0
-    end
+    end 
   end
 
   def discount_price(item_id)
